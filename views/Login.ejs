@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  h1 {
+    font-size: 50px;
+  }
+
+  .mainDiv {
+    margin: 100px auto;
+    width: 50%;
+  }
+
+  .labelName {
+    font-size: 30px;
+  }
+
+  .inputStyle {
+    height: 30px;
+    width: 50%;
+  }
+
+  .signInBtn {
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+</style>
+
+<body>
+  <div class="mainDiv">
+
+    <h1>Login Page</h1>
+    <br><br>
+    <form action="/loginApi" autocomplete="on" METHOD="POST">
+      <label class='labelName' for="email">Email : </label>
+      <br><br>
+      <input class='inputStyle' type="email" name="email">
+      <br><br>
+      <br>
+      <label class='labelName' for="password">Password : </label>
+      <br><br>
+      <input class='inputStyle' type="text" name="password">
+      <br><br>
+      <button class='signInBtn' type="submit">SignIn(Login)</button>
+    </form>
+  </div>
+
+</body>
+
+</html>
