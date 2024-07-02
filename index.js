@@ -1,6 +1,8 @@
 const express = require('express')
 const AuthDynamicRouters = require("./routers/dynamicRoutes/authPages")
+const GetAllProducts = require("./routers/appPages/GetMethod")
 const con = require('./connection/sqlDB')
+const cors = require('cors')
 const app = express()
 const port = 5000
 
@@ -14,6 +16,7 @@ con.connect((err) => {
 })
 
 // MIDDLEWARE  -----------------------------
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 
@@ -25,4 +28,4 @@ app.listen(port, () => {
 
 // COMMON ROUTES -------------------------------
 
-app.use('/', AuthDynamicRouters)
+app.use('/', AuthDynamicRouters, GetAllProducts)
