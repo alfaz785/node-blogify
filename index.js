@@ -1,31 +1,50 @@
-const express = require('express')
-const AuthDynamicRouters = require("./routers/dynamicRoutes/authPages")
-const GetAllProducts = require("./routers/appPages/GetMethod")
-const con = require('./connection/sqlDB')
-const cors = require('cors')
-const app = express()
-const port = 5000
+const express = require("express");
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+const path = require("path");
+const cors = require("cors");
+const userRouter = require("./routers/user");
+const blogRoute = require("./routers/blog");
+const { checkForAuthenticationCookie } = require("./middleware/authentication");
+const app = express();
+const port = 5000;
+const Blog = require("./models/blog");
 
+// MONGO DB CONNECTION ----------------------
 
-// SQL DB CONECTION -------------------
+mongoose
+  .connect("mongodb://localhost:27017/blogify")
+  .then(() => console.log("Mongo DB connected"));
 
-con.connect((err) => {
-    if (err) console.error('Error connecting to the database:', err.stack);
+//** MIDDLEWARE  -------------------------------------
 
-    console.log('SQL Database connected');
-})
-
-// MIDDLEWARE  -----------------------------
-app.use(cors())
+app.use(express.static(path.resolve("./public")));
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(checkForAuthenticationCookie("token"));
 
-// SERVER CONNECT ---------------------------
+//** SETUP VIEW ENGINE -----------------------------------
+
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
+
+//** HANDLE ROUTER ----------------------------------
+
+app.get("/", async (req, res) => {
+  const allBlogs = await Blog.find({});
+  res.render("home", {
+    user: req.user,
+    blog: allBlogs,
+  });
+});
+
+app.use("/user", userRouter);
+app.use("/blog", blogRoute);
+
+//** SERVER CONNECT ---------------------------------
 
 app.listen(port, () => {
-    console.log(`Server Connected ${port}`)
-})
-
-// COMMON ROUTES -------------------------------
-
-app.use('/', AuthDynamicRouters, GetAllProducts)
+  console.log(`Server Connected ${port}`);
+});
